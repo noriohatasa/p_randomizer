@@ -1,0 +1,102 @@
+{
+	"hardy": {
+		"name": "hardy",
+		"url": "https://pokeapi.co/api/v2/nature/1/"
+	},
+	"bold": {
+		"name": "bold",
+		"url": "https://pokeapi.co/api/v2/nature/2/"
+	},
+	"modest": {
+		"name": "modest",
+		"url": "https://pokeapi.co/api/v2/nature/3/"
+	},
+	"calm": {
+		"name": "calm",
+		"url": "https://pokeapi.co/api/v2/nature/4/"
+	},
+	"timid": {
+		"name": "timid",
+		"url": "https://pokeapi.co/api/v2/nature/5/"
+	},
+	"lonely": {
+		"name": "lonely",
+		"url": "https://pokeapi.co/api/v2/nature/6/"
+	},
+	"docile": {
+		"name": "docile",
+		"url": "https://pokeapi.co/api/v2/nature/7/"
+	},
+	"mild": {
+		"name": "mild",
+		"url": "https://pokeapi.co/api/v2/nature/8/"
+	},
+	"gentle": {
+		"name": "gentle",
+		"url": "https://pokeapi.co/api/v2/nature/9/"
+	},
+	"hasty": {
+		"name": "hasty",
+		"url": "https://pokeapi.co/api/v2/nature/10/"
+	},
+	"adamant": {
+		"name": "adamant",
+		"url": "https://pokeapi.co/api/v2/nature/11/"
+	},
+	"impish": {
+		"name": "impish",
+		"url": "https://pokeapi.co/api/v2/nature/12/"
+	},
+	"bashful": {
+		"name": "bashful",
+		"url": "https://pokeapi.co/api/v2/nature/13/"
+	},
+	"careful": {
+		"name": "careful",
+		"url": "https://pokeapi.co/api/v2/nature/14/"
+	},
+	"rash": {
+		"name": "rash",
+		"url": "https://pokeapi.co/api/v2/nature/15/"
+	},
+	"jolly": {
+		"name": "jolly",
+		"url": "https://pokeapi.co/api/v2/nature/16/"
+	},
+	"naughty": {
+		"name": "naughty",
+		"url": "https://pokeapi.co/api/v2/nature/17/"
+	},
+	"lax": {
+		"name": "lax",
+		"url": "https://pokeapi.co/api/v2/nature/18/"
+	},
+	"quirky": {
+		"name": "quirky",
+		"url": "https://pokeapi.co/api/v2/nature/19/"
+	},
+	"naive": {
+		"name": "naive",
+		"url": "https://pokeapi.co/api/v2/nature/20/"
+	},
+	"brave": {
+		"name": "brave",
+		"url": "https://pokeapi.co/api/v2/nature/21/"
+	},
+	"relaxed": {
+		"name": "relaxed",
+		"url": "https://pokeapi.co/api/v2/nature/22/"
+	},
+	"quiet": {
+		"name": "quiet",
+		"url": "https://pokeapi.co/api/v2/nature/23/"
+	},
+	"sassy": {
+		"name": "sassy",
+		"url": "https://pokeapi.co/api/v2/nature/24/"
+	},
+	"serious": {
+		"name": "serious",
+		"url": "https://pokeapi.co/api/v2/nature/25/"
+	}
+}

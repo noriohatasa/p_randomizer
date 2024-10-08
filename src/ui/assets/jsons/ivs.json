@@ -1,0 +1,26 @@
+[
+	{
+		"short": "HP",
+		"name": "HP"
+	},
+	{
+		"short": "Atk",
+		"name": "Ataque"
+	},
+	{
+		"short": "Def",
+		"name": "Defesa"
+	},
+	{
+		"short": "SpA",
+		"name": "Ataque Sp."
+	},
+	{
+		"short": "SpD",
+		"name": "Defesa Sp."
+	},
+	{
+		"short": "Spe",
+		"name": "Velocidade"
+	}
+]
