@@ -1,16 +1,16 @@
-import IvsJson from "../assets/jsons/ivs.json";
+import { IvValue } from "./randoms/GetRandomIvs";
 
 type args = {
 	name: string;
 	isShiny: boolean;
 	nature: string;
-	ivs: number[];
+	ivs: IvValue[];
 	moves: string[];
 	ability: string;
 	level?: number;
 };
 
-export default function SinglePokemonExport({
+export default async function SinglePokemonExport({
 	name,
 	isShiny,
 	nature,
@@ -26,7 +26,7 @@ export default function SinglePokemonExport({
 		`${nature} Nature`,
 		`Level: ${level ?? 50}`,
 		`EVs: 1 HP`,
-		`IVs: ${IvsJson.map((v, i) => `${ivs[i]} ${v.short}`).join(" / ")}`,
+		`IVs: ${ivs.map(v => `${v.value} ${v.short}`).join(" / ")}`,
 		`${moves.map(i => `- ${i}`).join(`\n`)}`,
 	];
 

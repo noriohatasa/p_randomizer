@@ -1,6 +1,11 @@
 {
 	"appId": "com.norio.p_randomizer",
 	"icon": "./icon.png",
+	"extraResources": [
+		"dist-electron/preload.cjs",
+		"dist-react/pokemon/*",
+		"dist-react/jsons/*"
+	],
 	"files": [
 		"dist-electron",
 		"dist-react"

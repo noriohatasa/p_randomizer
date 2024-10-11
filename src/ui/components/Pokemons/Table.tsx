@@ -1,82 +1,63 @@
-import { useCallback, useState } from "react";
-
-import PokemonsJson from "../../assets/jsons/pokemons.json";
-import GetPokemonSprite from "../../helpers/GetPokemonSprite";
-import UpperFirstLetter from "../../helpers/UpperFirstLetter";
-import { Pokemon as PokemonJsonType } from "../../assets/jsons/types";
+import { useCallback, useEffect, useState } from "react";
 
 import "./Table.css";
+import Card from "./Card";
+import { v4 as uuid } from "uuid";
+import { UseAppContext } from "../../contexts/AppContext";
 
+const maxCountPerPage = 2000; //28;
 type args = {
-	onCardClick: (data: PokemonJsonType & { level: number }) => Promise<void>;
+	onCardClick: (data: PokemonJson) => Promise<void>;
 };
 
-const PokemonsArray = Object.values(PokemonsJson) as PokemonJsonType[];
-
 function PokemonsTable({ onCardClick }: args) {
-	const [level, setLevel] = useState(1);
-	const [showing, setShowing] = useState(PokemonsArray.slice(0, 20));
+	const { pokemonArray } = UseAppContext();
 	const [selected, setSelected] = useState("");
-
-	const onChangeLevel = useCallback(
-		(e: React.FormEvent<HTMLInputElement>) => {
-			let value = +e.currentTarget.value;
-			value = Math.min(value, 100);
-			value = Math.max(value, 1);
-			setLevel(value);
-		},
-		[setLevel]
-	);
+	const [showing, setShowing] = useState(pokemonArray.slice(0, 20));
 
 	const onFilterChange = useCallback(
 		(e: React.FormEvent<HTMLInputElement>) => {
-			const filter = e.currentTarget.value.toLowerCase();
-			const regExStr = `.*${filter}.*`;
-			const regEx = new RegExp(regExStr);
-			const result = PokemonsArray.filter(item => item.name.match(regEx));
-			setShowing(result.slice(0, 20));
+			const filter = e.currentTarget.value;
+			const regEx = new RegExp(`.*${filter}.*`, "gi");
+			const result: PokemonJson[] = [];
+			pokemonArray.some(item => {
+				if (item.name.match(regEx)) result.push(item);
+				return result.length == maxCountPerPage;
+			});
+
+			setShowing(result);
 		},
-		[setShowing]
+		[setShowing, pokemonArray]
 	);
 
 	const onClick = useCallback(
-		(item: PokemonJsonType) => {
+		(item: PokemonJson) => {
 			setSelected(item.id);
-			onCardClick({ ...item, level });
+			onCardClick(item);
 		},
-		[onCardClick, level]
+		[onCardClick]
 	);
 
+	useEffect(() => {
+		setShowing(pokemonArray.slice(0, maxCountPerPage));
+	}, [pokemonArray, setShowing]);
+
 	return (
-		<>
-			<div id="filters">
-				<input className="filter" onChange={onFilterChange} />
-				<input
-					className="filter"
-					id="level"
-					onInput={onChangeLevel}
-					type="number"
-					value={level}
-				/>
+		<div id="PokemonsTable">
+			<div>
+				<input id="name-filter" onChange={onFilterChange} />
 			</div>
 			<div id="grid">
-				{showing.map((item: PokemonJsonType) => (
-					<div
-						key={item.id}
-						className="card"
-						onClick={() => onClick(item)}
-						style={{
-							boxShadow: `0px 0px 10px 1px ${
-								selected === item.id ? "royalblue" : "gray"
-							}`,
-						}}
-					>
-						<img src={GetPokemonSprite(item.id)} alt={item.name} />
-						<span>{UpperFirstLetter(item.name)}</span>
-					</div>
+				{showing.map((item: PokemonJson) => (
+					<Card
+						key={uuid()}
+						onClick={onClick}
+						item={item}
+						selected={selected == item.id}
+					/>
 				))}
 			</div>
-		</>
+		</div>
 	);
 }
 

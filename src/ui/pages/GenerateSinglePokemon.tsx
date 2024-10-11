@@ -1,34 +1,67 @@
-import Pokedex from "pokedex-promise-v2";
 import { useCallback, useState } from "react";
 
 import GeneratePokemon, { GeneratedPokemon } from "../helpers/GeneratePokemon";
 import PokemonsTable from "../components/Pokemons/Table";
 import CopyToClipboard from "../helpers/CopyToClipboard";
-import GetShinySprite from "../helpers/GetShinySprite";
-import GetPokemonSprite from "../helpers/GetPokemonSprite";
 import UpperFirstLetter from "../helpers/UpperFirstLetter";
+import { UseAppContext } from "../contexts/AppContext";
 
-import IvsArray from "../assets/jsons/ivs.json";
-import { Pokemon } from "../assets/jsons/types";
+import "./GenerateSinglePokemon.css";
 
-type args = {
-	dex: Pokedex;
-};
-
-function GenerateSinglePokemon({ dex }: args) {
+function GenerateSinglePokemon() {
+	const {
+		pokeApi,
+		imgPath,
+		shinyImgPath,
+		abilitiesJson,
+		naturesArray,
+		ivsArray,
+	} = UseAppContext();
 	const [activeData, setActiveData] = useState({} as GeneratedPokemon);
+	const [level, setLevel] = useState(1);
 
 	const onCardClick = useCallback(
-		async (data: Pokemon) => {
-			const newPoke = await GeneratePokemon({ dex, id: data.id });
+		async (data: PokemonJson) => {
+			const newPoke = await GeneratePokemon({
+				pokeApi,
+				id: data.id,
+				level,
+				abilitiesJson,
+				naturesArray,
+				ivsArray,
+			});
 			setActiveData(newPoke);
 		},
-		[dex, setActiveData]
+		[setActiveData, abilitiesJson]
 	);
+
+	const onChangeLevel = useCallback(
+		(e: React.FormEvent<HTMLInputElement>) => {
+			let value = +e.currentTarget.value;
+			value = Math.min(value, 100);
+			value = Math.max(value, 1);
+			setLevel(value);
+		},
+		[setLevel]
+	);
+
+	const imgSrc = activeData.isShiny
+		? `${shinyImgPath}/${activeData.id ?? "0"}.png`
+		: `${imgPath}/${activeData.id ?? "0"}.png`;
 
 	return (
 		<div id="main">
 			<div id="left-panel">
+				<div id="filters">
+					<label className="filter-label">Level: </label>
+					<input
+						className="filter"
+						id="level"
+						onInput={onChangeLevel}
+						type="number"
+						value={level}
+					/>
+				</div>
 				<PokemonsTable onCardClick={onCardClick} />
 			</div>
 			<div id="right-panel">
@@ -38,25 +71,7 @@ function GenerateSinglePokemon({ dex }: args) {
 
 				<div className="panel">
 					<div className="card">
-						{activeData.isShiny ? (
-							<img
-								src={
-									activeData.id
-										? GetShinySprite(activeData.id)
-										: GetPokemonSprite("0")
-								}
-								alt={activeData.name}
-							/>
-						) : (
-							<img
-								src={
-									activeData.id
-										? GetPokemonSprite(activeData.id)
-										: GetPokemonSprite("0")
-								}
-								alt={activeData.name}
-							/>
-						)}
+						{imgPath && <img src={imgSrc} alt={activeData.name} />}
 					</div>
 				</div>
 
@@ -106,28 +121,15 @@ function GenerateSinglePokemon({ dex }: args) {
 					</span>
 				</div>
 
-				<div className="row">
-					<span className="field">
-						<span id="ivs">
-							<b>IV'S: </b>
+				{activeData.ivs?.map(item => (
+					<div className="row" key={item.name}>
+						<span className="field">
+							<b>{UpperFirstLetter(item.name)}: </b>
 						</span>
-					</span>
 
-					<span className="value list">
-						<span className="row" />
-						{IvsArray.map((item, index) => (
-							<div className="row" key={item.name}>
-								<span className="field">
-									<b>{UpperFirstLetter(item.name)}: </b>
-								</span>
-
-								<span className="value">
-									{activeData.ivs && activeData.ivs[index]}
-								</span>
-							</div>
-						))}
-					</span>
-				</div>
+						<span className="value">{item.value}</span>
+					</div>
+				))}
 			</div>
 		</div>
 	);

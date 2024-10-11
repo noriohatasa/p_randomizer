@@ -1,14 +1,17 @@
-import Pokedex, {
-	Pokemon,
-	PokemonAbility,
-	MoveElement,
-} from "pokedex-promise-v2";
+import { Pokemon, PokemonClient, PokemonMove } from "pokenode-ts";
 import SinglePokemonExport from "./SinglePokemonExport";
-import { GetRandomNature } from "./GetRandomNature";
+import { GetRandomNature } from "./randoms/GetRandomNature";
+import GetRandomIvs, { IvValue } from "./randoms/GetRandomIvs";
+import GetRandomMoves from "./randoms/GetRandomMoves";
+import GetRandomShiny from "./randoms/GetRandomShiny";
+import GetRandomAbility from "./randoms/GetRandomAbility";
 
 type args = {
-	dex: Pokedex;
+	pokeApi: PokemonClient;
 	id: string;
+	abilitiesJson: AbilityFile;
+	naturesArray: NatureJson[];
+	ivsArray: IvJson[];
 	generation?: string;
 	level?: number;
 };
@@ -17,7 +20,7 @@ export type GeneratedPokemon = {
 	id: string;
 	name: string;
 	moves: string[];
-	ivs: number[];
+	ivs: IvValue[];
 	nature: string;
 	isShiny: boolean;
 	ability: string;
@@ -25,101 +28,45 @@ export type GeneratedPokemon = {
 };
 
 export default async function GeneratePokemon({
-	dex,
+	pokeApi,
 	id,
 	level,
 	generation,
+	abilitiesJson,
+	naturesArray,
+	ivsArray,
 }: args): Promise<GeneratedPokemon> {
 	const shinyRoll = 150;
-	const res: Pokemon = await dex.getPokemonByName(id);
+	const { abilities, moves, name }: Pokemon = await pokeApi.getPokemonByName(
+		id
+	);
+
 	if (!generation) generation = "diamond-pearl";
 
-	const isShiny = IsShiny(shinyRoll);
-	const ability = await GetAbility(dex, res.abilities);
-	const moves = GetMoves(res.moves);
-	const ivs = GetIvs(isShiny);
-	const nature = GetRandomNature();
-
-	// ##########################
-	// #region - Get importCode #
-	const importCode = SinglePokemonExport({
-		name: res.name,
-		isShiny,
-		nature,
-		ivs,
-		moves,
+	const _isShiny = GetRandomShiny(shinyRoll);
+	const _ability = await GetRandomAbility(pokeApi, abilitiesJson, abilities);
+	const _moves = GetRandomMoves(moves, generation);
+	const _ivs = GetRandomIvs(ivsArray, _isShiny);
+	const _nature = await GetRandomNature(naturesArray);
+	const _importCode = await SinglePokemonExport({
+		name,
 		level,
-		ability,
+		ivs: _ivs,
+		moves: _moves,
+		nature: _nature,
+		isShiny: _isShiny,
+		ability: _ability,
 	});
 
-	// ########################
 	// #region - Build output #
 	return {
 		id,
-		name: res.name,
-		moves,
-		ivs,
-		nature,
-		isShiny,
-		ability,
-		import: importCode,
+		name,
+		moves: _moves,
+		ivs: _ivs,
+		nature: _nature,
+		isShiny: _isShiny,
+		ability: _ability,
+		import: _importCode,
 	};
-}
-
-// #####################
-// #region - Get shiny #
-function IsShiny(shinyRoll: number) {
-	const roll = Math.trunc(Math.random() * shinyRoll);
-	return roll === 0;
-}
-
-// #######################
-// #region - Get ability #
-async function GetAbility(dex: Pokedex, abilities: PokemonAbility[]) {
-	const abRoll = Math.trunc(Math.random() * abilities.length);
-	const name = abilities[abRoll].ability.name;
-	const dexAb = await dex.getAbilityByName(name);
-	console.log(dexAb.generation);
-	return name;
-}
-
-// #####################
-// #region - Get moves #
-function GetMoves(moves: MoveElement[], generation?: string, level?: number) {
-	const res = [];
-	const filtered = moves.filter(i => {
-		const versionDetails = generation
-			? i.version_group_details.find(
-					j => j.version_group.name === generation
-			  )
-			: i.version_group_details.slice(-1)[0];
-
-		if (!versionDetails) return false;
-
-		const learnByLvlUp =
-			versionDetails.move_learn_method.name === "level-up" ||
-			versionDetails.move_learn_method.name === "tutor";
-
-		const filterByLvl = level
-			? versionDetails.level_learned_at <= level
-			: true;
-
-		return learnByLvlUp && filterByLvl;
-	});
-
-	while (res.length < 4 && filtered.length > 0) {
-		const pos = Math.trunc(Math.random() * filtered.length);
-		res.push(filtered.splice(pos, 1)[0].move.name);
-	}
-
-	return res;
-}
-
-// ####################
-// #region - Get IV's #
-function GetIvs(isShiny: boolean) {
-	return [0, 0, 0, 0, 0, 0].map(() => {
-		const iv = Math.trunc(Math.random() * 32);
-		return isShiny && iv < 20 ? 20 : iv;
-	});
 }

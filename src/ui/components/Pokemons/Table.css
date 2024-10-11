@@ -1,146 +1,33 @@
-#main {
-	display: flex;
-	grid-template-columns: auto auto;
-	align-items: center;
-	justify-content: center;
-	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-}
-
-.text-rainbow-animation {
-	font-family:arial black;
-	background-image: 
-	linear-gradient(to right, red,orange,yellow,green,blue,indigo,violet, red);
-	-webkit-background-clip: text;
-	background-clip: inherit;
-	-webkit-text-fill-color: transparent;
-	animation: rainbow-animation 30s linear infinite;
-}
-
-@keyframes rainbow-animation {
-	to {
-		background-position: 1200vh;
-	}
-}
-
-#left-panel {
-	margin-top: 50px;
-	width: fit-content;
-	align-self: start;
-
-	#filters {
-		display: flex;
-		flex-direction: row;
-
-		.filter {
-			width: 100%;
-			height: 2em;
-			border-radius: 10px;
-			text-align: center;
-			margin-left: 3px;
-			margin-right: 3px;
-		}
-
-		#level {
-			width: 20%;
-		}
-	}
-
-
-	.card {
-		display: flex;
-		flex-direction: column;
-		border-radius: 20px;
-
-		img {
-			pointer-events: none;
-		}
-	
-		span {
-			display: flex;
-			align-self: center;
-			position: relative;
-			bottom: 0.6em
-		}
-	}
-
-	.card:hover {
-		cursor: pointer;
-		border-radius: 1px black;
-	}
+#PokemonsTable {
+	padding: 1em 2em;
 
 	#grid {
-		margin-top: 30px;
+		justify-items: center;
+		margin-top: 1em;
 		margin-bottom: 30px;
-		display: grid;
-		grid-template-columns: 96px 96px 96px 96px;
-		grid-template-rows: auto;
-		gap: 30px 50px;
-	}
-}
+		
+		max-height: 600px;
+		min-width: 96px;
+		max-width: 800px;
+		width: auto;
 
-#right-panel {
-	display: flex;
-	flex-direction: column;
-	align-self: center;
-	width: 24em;
-	height: 100%;
-	padding: 4em;
-	align-self: start;
-	
-	button {
+		display: flex;
+		flex-direction: row;
+		flex-flow: wrap;
+
+		column-gap: 1em;
+		row-gap: 1em;
+		padding: 1em;
+		overflow-y: scroll;
+	}
+
+	#name-filter {
 		width: 100%;
-		justify-content: center;
-		height: 3em;
-		margin-bottom: 2em;
-		border-radius: 15px;
-		background-color: rgb(209, 209, 209);
-		font-weight: bold;
-	}
-
-	button:hover {
-		cursor: pointer;
-	}
-
-	.panel {
-		display: flex;
-		justify-content: center;
-
-		.card {
-			height: 96px;
-			width: 96px;
-			display: flex;
-			flex-direction: column;
-			border-radius: 20px;
-		}
-	}
-
-	.row {
-		display: grid;
-		grid-template-columns: 6em auto;
-		gap: 0px 20px;
-		margin-bottom: 1em; 
-
-		.field {
-			text-align: right;
-		}
-
-		.value {
-			text-align: left;
-		}
-
-		.list {
-			display: flex;
-			flex-direction: column;
-
-			.item {
-				margin-bottom: 0.5em;
-			}
-		}
-	}
-
-	#moves {
-		display: flex;
-		flex-direction: column;
+		height: 2em;
+		max-width: 600px;
+		text-align: center;
+		margin-left: 3px;
+		margin-right: 3px;
+		font-size: 1em;
 	}
 }
-
