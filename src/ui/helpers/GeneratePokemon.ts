@@ -1,4 +1,4 @@
-import { Pokemon, PokemonClient, PokemonMove } from "pokenode-ts";
+import { Pokemon, PokemonClient } from "pokenode-ts";
 import SinglePokemonExport from "./SinglePokemonExport";
 import { GetRandomNature } from "./randoms/GetRandomNature";
 import GetRandomIvs, { IvValue } from "./randoms/GetRandomIvs";
@@ -37,15 +37,16 @@ export default async function GeneratePokemon({
 	ivsArray,
 }: args): Promise<GeneratedPokemon> {
 	const shinyRoll = 150;
-	const { abilities, moves, name }: Pokemon = await pokeApi.getPokemonByName(
-		id
-	);
+	const pokemon = await pokeApi.getPokemonByName(id);
+	const { abilities, moves, name }: Pokemon = pokemon;
 
 	if (!generation) generation = "diamond-pearl";
 
 	const _isShiny = GetRandomShiny(shinyRoll);
-	const _ability = await GetRandomAbility(pokeApi, abilitiesJson, abilities);
-	const _moves = GetRandomMoves(moves, generation);
+	const _ability = await GetRandomAbility(pokeApi, abilitiesJson, [
+		...abilities,
+	]);
+	const _moves = GetRandomMoves(moves, generation, level);
 	const _ivs = GetRandomIvs(ivsArray, _isShiny);
 	const _nature = await GetRandomNature(naturesArray);
 	const _importCode = await SinglePokemonExport({

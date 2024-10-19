@@ -82,7 +82,7 @@ export default function AppProvider({ children }: args) {
 	const updateNatures = useCallback(async () => {
 		console.log("Loading natures");
 		const data = await window.electron.LoadJsonData("natures");
-		setNaturesArray(data);
+		setNaturesArray(Object.values(data));
 	}, [setNaturesArray]);
 
 	useEffect(() => {

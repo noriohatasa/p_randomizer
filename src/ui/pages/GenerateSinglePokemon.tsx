@@ -32,7 +32,7 @@ function GenerateSinglePokemon() {
 			});
 			setActiveData(newPoke);
 		},
-		[setActiveData, abilitiesJson]
+		[setActiveData, abilitiesJson, level]
 	);
 
 	const onChangeLevel = useCallback(
