@@ -1,4 +1,5 @@
 import { IvValue } from "./randoms/GetRandomIvs";
+import UpperFirstLetter from "./UpperFirstLetter";
 
 type args = {
 	name: string;
@@ -23,7 +24,7 @@ export default async function SinglePokemonExport({
 		name,
 		`Shiny: ${isShiny ? "Yes" : "No"}`,
 		`Ability: ${ability}`,
-		`${nature} Nature`,
+		`${UpperFirstLetter(nature)} Nature`,
 		`Level: ${level ?? 50}`,
 		`EVs: 1 HP`,
 		`IVs: ${ivs.map(v => `${v.value} ${v.short}`).join(" / ")}`,
